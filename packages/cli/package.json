@@ -1,0 +1,20 @@
+{
+  "name": "easy-file-share",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "bin": {
+    "easy-file-share": "./index.js",
+    "efs": "./index.js"
+  },
+  "scripts": {},
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.4.0",
+    "commander": "^10.0.1",
+    "execa": "^7.1.1",
+    "inquirer": "^9.2.6"
+  }
+}
