@@ -19,13 +19,13 @@ export async function POST(request: Request) {
     };
     const key = getKey();
 
-    await TunnelCollection.insertOne({
+    const { insertedId } = await TunnelCollection.insertOne({
       key,
       ...validated,
       createdAt: new Date(),
       updatedAt: new Date(),
     });
-    return NextResponse.json({ id: key });
+    return NextResponse.json({ id: insertedId.toString(), key });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: error.issues }, { status: 400 });

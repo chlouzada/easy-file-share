@@ -21,12 +21,12 @@ const baseUrl = 'https://easy-file-share.vercel.app';
 
 const tunnel = {
   /**
-   * @param {string} id
+   * @param {string} key
    * @returns {Promise<string | null>}
    */
-  get: async (id) => {
+  get: async (key) => {
     try {
-      const res = await axios.get(`${baseUrl}/api/tunnels/${id}`);
+      const res = await axios.get(`${baseUrl}/api/tunnels/${key}`);
       return res.data.url;
     } catch (error) {
       if (error.response.status === 404) {
@@ -59,13 +59,19 @@ const tunnel = {
 
   /**
    * @param {string} url
-   * @returns {Promise<string>}
+   * @returns {Promise<{
+   *  id: string,
+   *  key: string,
+   * }>}
    */
   create: async (url) => {
     const res = await axios.post(`${baseUrl}/api/tunnels`, {
       url,
     });
-    return res.data.id;
+    return {
+      id: res.data.id,
+      key: res.data.key,
+    };
   },
 };
 
@@ -102,6 +108,7 @@ program
           'localhost.run',
         ]).stdout;
 
+        /** @type {string | null} */
         let id = null;
 
         // @ts-ignore
@@ -111,11 +118,13 @@ program
           const match = chunk.toString().match(regex);
           if (match) {
             console.log('Tunnel created successfully');
+            /** @type {string} */
             const url = match[0];
             console.log(`URL: ${url}`);
             if (!id) {
-              id = await tunnel.create(url);
-              console.log(`ID: ${id}`);
+              const created = await tunnel.create(url);
+              id = created.id;
+              console.log(`Key: ${created.key}`);
             } else {
               tunnel.update(id, url);
             }
@@ -132,6 +141,7 @@ program
   .description('Pull a file from a tunnel')
   .action(async (data) => {
     try {
+      /** @type {string | null} */
       const baseUrl = data.startsWith('http') ? data : await tunnel.get(data);
 
       if (!baseUrl) {
@@ -139,16 +149,18 @@ program
         return;
       }
 
+      /** @type {string[] | null} */
       let files = null;
       try {
-        files = await axios.get(baseUrl);
+        const res = await axios.get(baseUrl);
+        files = res.data;
       } catch (error) {
         console.log(error);
         console.error(`Error getting available files`);
         process.exit(1);
       }
 
-      if (!files.data.length) {
+      if (!files?.length) {
         console.error(`No files found.`);
         return;
       }
@@ -158,7 +170,7 @@ program
           type: 'list',
           name: 'file',
           message: 'Select a file to pull',
-          choices: files.data,
+          choices: files,
         },
       ]);
 

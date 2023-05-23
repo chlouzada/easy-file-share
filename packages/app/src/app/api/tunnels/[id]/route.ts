@@ -2,10 +2,11 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { nanoid } from 'nanoid';
 import { TunnelCollection } from '@/server/db';
+import { ObjectId } from 'mongodb';
 
 export async function GET(request: Request) {
-  const id = request.url.split('/').reverse().shift();
-  const doc = await TunnelCollection.findOne({ key: id });
+  const key = request.url.split('/').reverse().shift();
+  const doc = await TunnelCollection.findOne({ key });
   if (!doc) {
     return NextResponse.json({ error: 'not found' }, { status: 404 });
   }
@@ -25,9 +26,8 @@ export async function PUT(request: Request) {
         id,
         url: body.url,
       });
-
     await TunnelCollection.updateOne(
-      { key: id },
+      { _id: new ObjectId(id) },
       {
         $set: {
           url: validated.url,
@@ -35,7 +35,6 @@ export async function PUT(request: Request) {
         },
       }
     );
-
     return NextResponse.json({ id });
   } catch (error) {
     if (error instanceof z.ZodError) {
