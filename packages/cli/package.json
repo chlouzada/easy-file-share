@@ -5,8 +5,8 @@
   "main": "index.js",
   "type": "module",
   "bin": {
-    "easy-file-share": "./index.js",
-    "efs": "./index.js"
+    "easy-file-share": "./src/index.js",
+    "efs": "./src/index.js"
   },
   "scripts": {},
   "author": "",

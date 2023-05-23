@@ -2,78 +2,16 @@
 // @ts-check
 
 import { program } from 'commander';
-import {
-  existsSync,
-  createReadStream,
-  readdirSync,
-  writeFileSync,
-  createWriteStream,
-} from 'fs';
+import { createReadStream, readdirSync, createWriteStream } from 'fs';
 import { createServer } from 'http';
 import { join } from 'path';
-import { execSync, spawn } from 'child_process';
 import { execa } from 'execa';
 import axios from 'axios';
 import inquirer from 'inquirer';
 
-const baseUrl = 'https://easy-file-share.vercel.app';
-// const baseUrl = 'http://localhost:3001';
+import { tunnel } from './helpers/tunnel.js';
 
-const tunnel = {
-  /**
-   * @param {string} key
-   * @returns {Promise<string | null>}
-   */
-  get: async (key) => {
-    try {
-      const res = await axios.get(`${baseUrl}/api/tunnels/${key}`);
-      return res.data.url;
-    } catch (error) {
-      if (error.response.status === 404) {
-        return null;
-      } else {
-        throw error;
-      }
-    }
-  },
-
-  /**
-   * @param {string} id
-   * @param {string} url
-   * @returns {Promise<string | null>}
-   */
-  update: async (id, url) => {
-    try {
-      const res = await axios.put(`${baseUrl}/api/tunnels/${id}`, {
-        url,
-      });
-      return res.data.id;
-    } catch (error) {
-      if (error.response.status === 404) {
-        return null;
-      } else {
-        throw error;
-      }
-    }
-  },
-
-  /**
-   * @param {string} url
-   * @returns {Promise<{
-   *  id: string,
-   *  key: string,
-   * }>}
-   */
-  create: async (url) => {
-    const res = await axios.post(`${baseUrl}/api/tunnels`, {
-      url,
-    });
-    return {
-      id: res.data.id,
-      key: res.data.key,
-    };
-  },
-};
+const PORT = 8080;
 
 program
   .command('serve')
@@ -81,30 +19,28 @@ program
   .action(async () => {
     try {
       const server = createServer((req, res) => {
-        if (req.url === '/') {
+        /** @type {any} */
+        const url = req.url;
+        if (url === '/') {
           const filenames = readdirSync(process.cwd());
           res.writeHead(200, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify(filenames));
           return;
         }
-
-        // @ts-ignore
-        const filePath = join(process.cwd(), req.url);
+        const filePath = join(process.cwd(), url);
         const fileStream = createReadStream(filePath);
         fileStream.on('error', (error) => {
           res.writeHead(404, { 'Content-Type': 'text/plain' });
           res.end('File not found');
         });
-
         res.writeHead(200, { 'Content-Type': 'application/octet-stream' });
         fileStream.pipe(res);
       });
 
-      const port = 8080;
-      server.listen(port, async () => {
+      server.listen(PORT, async () => {
         const stream = execa('ssh', [
           '-R',
-          '80:localhost:8080',
+          `80:localhost:${PORT}`,
           'localhost.run',
         ]).stdout;
 
