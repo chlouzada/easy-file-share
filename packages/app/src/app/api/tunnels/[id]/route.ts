@@ -19,7 +19,7 @@ export async function PUT(request: Request) {
     const body = await request.json();
     const validated = z
       .object({
-        id: z.string().max(5),
+        id: z.string().length(24),
         url: z.string(),
       })
       .parse({
