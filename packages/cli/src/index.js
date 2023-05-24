@@ -13,7 +13,7 @@ import { pull } from './helpers/pull.js';
 program.command('serve').description('Serve current directory').action(server);
 
 program
-  .command('pull <key | url>')
+  .command('pull <key_or_url>')
   .description('Pull a file from a tunnel')
   .action(pull);
 
