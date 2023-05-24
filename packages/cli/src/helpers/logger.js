@@ -1,9 +1,12 @@
-import chalk from "chalk";
+import chalk from 'chalk';
 
 export const logger = {
   error(...args) {
     console.log(chalk.red(...args));
-    process.exit(1)
+    process.exit(1);
+  },
+  warn(...args) {
+    console.log(chalk.yellow(...args));
   },
   info(...args) {
     console.log(chalk.cyan(...args));
