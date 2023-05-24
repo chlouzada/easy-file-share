@@ -36,35 +36,41 @@ program
         res.writeHead(200, { 'Content-Type': 'application/octet-stream' });
         fileStream.pipe(res);
       });
-
       server.listen(PORT, async () => {
         const stream = execa('ssh', [
           '-R',
           `80:localhost:${PORT}`,
           'localhost.run',
         ]).stdout;
-
+        if (!stream) {
+          console.error('Error creating tunnel');
+          process.exit(1);
+        }
         /** @type {string | null} */
         let id = null;
-
-        // @ts-ignore
         stream.on('data', async (chunk) => {
-          const regex =
-            /\bhttps?:\/\/(?:[\w-]+\.)*[\w-]+(?:\.[a-zA-Z]{2,})+(?:\/(?:[^\s/$.?#]+\/?)*(?:\?[^\s/?#]+)?(?:#[^\s#]*)?)?/;
-          const match = chunk.toString().match(regex);
-          if (match) {
-            console.log('Tunnel created successfully');
-            /** @type {string} */
-            const url = match[0];
-            console.log(`URL: ${url}`);
-            if (!id) {
-              const created = await tunnel.create(url);
-              id = created.id;
-              console.log(`Key: ${created.key}`);
-            } else {
-              tunnel.update(id, url);
-            }
+          /** @type {string[] | null} */
+          const match = chunk
+            .toString()
+            .match(
+              /\bhttps?:\/\/(?:[\w-]+\.)*[\w-]+(?:\.[a-zA-Z]{2,})+(?:\/(?:[^\s/$.?#]+\/?)*(?:\?[^\s/?#]+)?(?:#[^\s#]*)?)?/
+            );
+          if (!match || !match.length) {
+            console.log(chunk.toString());
+            console.error("Couldn't parse tunnel url");
+            process.exit(1);
           }
+          /** @type {string} */
+          const url = match[0];
+          if (!id) {
+            console.log('Tunnel created successfully');
+            const created = await tunnel.create(url);
+            id = created.id;
+            console.log(`\nKey: ${created.key}`);
+          } else {
+            tunnel.update(id, url);
+          }
+          console.log(`URL: ${url}`);
         });
       });
     } catch (error) {
@@ -73,18 +79,16 @@ program
   });
 
 program
-  .command('pull <id/url>')
+  .command('pull <key/url>')
   .description('Pull a file from a tunnel')
   .action(async (data) => {
     try {
       /** @type {string | null} */
       const baseUrl = data.startsWith('http') ? data : await tunnel.get(data);
-
       if (!baseUrl) {
         console.error(`No tunnel found with id ${data}`);
         return;
       }
-
       /** @type {string[] | null} */
       let files = null;
       try {
@@ -95,12 +99,10 @@ program
         console.error(`Error getting available files`);
         process.exit(1);
       }
-
       if (!files?.length) {
         console.error(`No files found.`);
         return;
       }
-
       const { file } = await inquirer.prompt([
         {
           type: 'list',
