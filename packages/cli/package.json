@@ -8,7 +8,9 @@
     "easy-file-share": "./src/index.js",
     "efs": "./src/index.js"
   },
-  "scripts": {},
+  "scripts": {
+    "start": "node ./src/index.js"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {

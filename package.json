@@ -4,6 +4,7 @@
   "description": "",
   "scripts": {
     "dev": "pnpm --filter \"app\" dev",
+    "start": "pnpm --filter \"easy-file-share\" start",
     "build": "pnpm --filter \"app\" build"
   },
   "author": "",
