@@ -9,8 +9,6 @@ import inquirer from 'inquirer';
 import { tunnel } from './helpers/tunnel.js';
 import { server } from './helpers/server.js';
 
-const PORT = 8080;
-
 program.command('serve').description('Serve current directory').action(server);
 
 program
