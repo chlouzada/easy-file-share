@@ -13,6 +13,7 @@
     "url": "https://github.com/chlouzada/easy-file-share.git",
     "directory": "packages/cli"
   },
+  "license": "MIT",
   "scripts": {
     "start": "node ./src/index.js"
   },

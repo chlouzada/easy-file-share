@@ -14,9 +14,15 @@ npm i -g easy-file-share
 
 ## Usage
 
-```bash
-easy-file-share --help
+For sharing files:
 
-efs --help
+```bash
+easy-file-share serve
+```
+
+For pulling files:
+
+```bash
+easy-file-share pull <key>
 ```
 
