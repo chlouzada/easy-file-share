@@ -2,9 +2,9 @@
 
 ## Description
 
-A CLI for sharing files over the internet.
+This is a command-line interface (CLI) tool designed for sharing files over the internet.
 
-Don't use this for anything important.
+It is strongly advised to use a strong password when sharing important files using this tool.
 
 ## Install
 
