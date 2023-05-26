@@ -36,7 +36,7 @@ const inquire = async (files) => {
 /**
  *
  * @param {string} data
- * @param {{password?: string}} options
+ * @param {{password?: string} | undefined} options
  * @returns void
  */
 export const pull = async (data, options) => {
@@ -51,12 +51,12 @@ export const pull = async (data, options) => {
     try {
       const res = await axios.get(baseUrl, {
         headers: {
-          'x-password': options.password,
+          'x-password': options?.password,
         },
       });
       files = res.data;
     } catch (error) {
-      if (error.response.status === 401) {
+      if (error.response?.status === 401) {
         return logger.error('Incorrect password');
       }
       logger.warn(error);
@@ -71,7 +71,7 @@ export const pull = async (data, options) => {
     const res = await axios.get(`${baseUrl}/${file}`, {
       responseType: 'stream',
       headers: {
-        'x-password': options.password,
+        'x-password': options?.password,
       },
     });
     res.data.pipe(createWriteStream(filename));
