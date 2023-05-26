@@ -17,7 +17,7 @@ const putSchema = z.object({
   }),
 });
 
-export const tunnelRepository = {
+const _tunnelRepository = {
   create: async (data: z.infer<typeof createSchema>) => {
     return TunnelCollection.insertOne({
       ...createSchema.parse(data),
@@ -39,3 +39,14 @@ export const tunnelRepository = {
   },
   findByKey: (key: string) => TunnelCollection.findOne({ key }),
 };
+
+const proxy = new Proxy(_tunnelRepository, {
+  get: (target, prop) => {
+    TunnelCollection.deleteMany({
+      updatedAt: { $lt: new Date(Date.now() - 1000 * 60 * 15) },
+    });
+    return (target as any)[prop];
+  },
+});
+
+export { proxy as tunnelRepository };

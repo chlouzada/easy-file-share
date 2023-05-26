@@ -4,7 +4,7 @@
 - [ ] options for key length on create tunnel request
 - [ ] handle path for new file name prompt
 - [x] add password
-- [ ] remove old tunnels from db
+- [x] remove old tunnels from db
 
 # FIX
   
