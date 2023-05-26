@@ -12,7 +12,8 @@ program
   .action(server);
 
 program
-  .command('pull <key_or_url>')
+  .command('pull')
+  .argument('<key>', 'Key or URL')
   .option('-p, --password <password>', 'Password')
   .description('Pull a file from a tunnel')
   .action(pull);
