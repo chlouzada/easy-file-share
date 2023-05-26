@@ -1,6 +1,5 @@
 // @ts-check
 
-import ora from 'ora';
 import { createWriteStream } from 'fs';
 import axios from 'axios';
 import inquirer from 'inquirer';
@@ -54,13 +53,17 @@ export const pull = async (data, options) => {
           'x-password': options?.password,
         },
       });
+      if(!Array.isArray(res.data)) {
+        logger.error('Tunnel is closed')
+      } 
+      console.log(res.data)
       files = res.data;
     } catch (error) {
       if (error.response?.status === 401) {
         return logger.error('Incorrect password');
       }
       logger.warn(error);
-      return logger.error('Error fetching files');
+      return logger.error('Unexpected error fetching files');
     }
     if (!files?.length) {
       return logger.error(`No files found.`);
@@ -76,7 +79,7 @@ export const pull = async (data, options) => {
     });
     res.data.pipe(createWriteStream(filename));
   } catch (error) {
-    if (error.response.status === 401) {
+    if (error.response?.status === 401) {
       return logger.error('Incorrect password');
     }
     logger.warn(error);
