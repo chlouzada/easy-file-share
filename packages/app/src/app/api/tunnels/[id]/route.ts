@@ -3,17 +3,18 @@ import { z } from 'zod';
 import { nanoid } from 'nanoid';
 import { TunnelCollection } from '@/server/db';
 import { ObjectId } from 'mongodb';
+import { withRateLimit } from '@/server/utils/withRateLimit';
 
-export async function GET(request: Request) {
+export const GET = withRateLimit(async function GET(request: Request) {
   const key = request.url.split('/').reverse().shift();
   const doc = await TunnelCollection.findOne({ key });
   if (!doc) {
     return NextResponse.json({ error: 'not found' }, { status: 404 });
   }
   return NextResponse.json({ url: doc.url });
-}
+});
 
-export async function PUT(request: Request) {
+export const PUT = withRateLimit(async function PUT(request: Request) {
   try {
     const id = request.url.split('/').reverse().shift();
     const body = await request.json();
@@ -47,4 +48,4 @@ export async function PUT(request: Request) {
       );
     }
   }
-}
+});

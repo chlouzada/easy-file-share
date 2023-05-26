@@ -2,10 +2,11 @@ import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { nanoid } from 'nanoid';
 import { TunnelCollection } from '@/server/db';
+import { withRateLimit } from '@/server/utils/withRateLimit';
 
 const DEFAULT_LENGTH = 5;
 
-export async function POST(request: Request) {
+export const POST = withRateLimit(async function POST(request: Request) {
   try {
     const body = await request.json();
     const validated = z
@@ -42,4 +43,4 @@ export async function POST(request: Request) {
       );
     }
   }
-}
+});
