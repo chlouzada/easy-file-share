@@ -10,7 +10,7 @@
   
 - [ ] remove folders from options on pull options
 - [ ] error on pulling files starting with a dot (e.g. AxiosError: Request failed with status code 404/Unexpected error)
-- [ ] duplication of keys
+- [x] duplication of keys
   
  
     

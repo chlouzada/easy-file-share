@@ -1,35 +1,26 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
 import { nanoid } from 'nanoid';
-import { TunnelCollection } from '@/server/db';
+import { tunnelRepository } from '@/server/db';
 import { withRateLimit } from '@/server/utils/withRateLimit';
 
 const DEFAULT_LENGTH = 5;
 
-export const POST = withRateLimit(async function POST(request: Request) {
+const getValidKey = async (): Promise<string> => {
+  const key = nanoid(DEFAULT_LENGTH);
+  if (key.startsWith('-')) return getValidKey();
+  const found = await tunnelRepository.findByKey(key);
+  if (found) return getValidKey();
+  return key;
+};
+
+export const POST = withRateLimit(async function (request: Request) {
   try {
     const body = await request.json();
-    const validated = z
-      .object({
-        url: z.string(),
-        options: z
-          .object({
-            keyLenght: z.number().optional(),
-          })
-          .optional(),
-      })
-      .parse(body);
-    const getKey = (): string => {
-      const key = nanoid(validated.options?.keyLenght ?? DEFAULT_LENGTH);
-      if (key.startsWith('-')) return getKey();
-      return key;
-    };
-    const key = getKey();
-    const { insertedId } = await TunnelCollection.insertOne({
+    const key = await getValidKey();
+    const { insertedId } = await tunnelRepository.create({
       key,
-      ...validated,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      url: body.url,
     });
     return NextResponse.json({ id: insertedId.toString(), key });
   } catch (error) {
