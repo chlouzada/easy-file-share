@@ -1,8 +1,9 @@
 # FEAT
 
+- [ ] default config file
 - [ ] options for key length on create tunnel request
 - [ ] handle path for new file name prompt
-- [ ] add password
+- [x] add password
 
 # FIX
   

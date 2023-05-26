@@ -11,10 +11,12 @@ import { logger } from './logger.js';
 
 const PORT = 8080;
 
-/** @type {string | null} */
-let key = null;
-/** @type {string | null} */
-let id = null;
+/** @type {string | undefined} */
+let password;
+/** @type {string | undefined} */
+let key;
+/** @type {string | undefined} */
+let id;
 
 let dtFormatter = new Intl.DateTimeFormat('en-US', {
   hour: 'numeric',
@@ -23,10 +25,24 @@ let dtFormatter = new Intl.DateTimeFormat('en-US', {
   hour12: false,
 });
 
-export const server = () => {
+/** @param {import('http').IncomingHttpHeaders} headers */
+const isAuthed = (headers) => {
+  if (!password) return true;
+  const auth = headers['x-password'];
+  if (!auth) return false;
+  return auth === password;
+};
+
+/** @param {{ password?: string }} options */
+export const server = (options) => {
+  password = options.password;
   createServer((req, res) => {
-    /** @type {any} */
-    const url = req.url;
+    if (!isAuthed(req.headers)) {
+      res.writeHead(401);
+      res.end();
+      return;
+    }
+    const url = /** @type {string} */ (req.url);
     if (url === '/') {
       const filenames = readdirSync(process.cwd());
       res.writeHead(200, { 'Content-Type': 'application/json' });

@@ -1,6 +1,6 @@
 // @ts-check
 
-import axios from "axios";
+import axios from 'axios';
 
 const baseUrl = 'https://easy-file-share.vercel.app';
 // const baseUrl = 'http://localhost:3001';
