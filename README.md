@@ -26,3 +26,11 @@ For pulling files:
 easy-file-share pull <key>
 ```
 
+## Architecture
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/chlouzada/easy-file-share/main/assets/architecture.png">
+    <img src="https://raw.githubusercontent.com/chlouzada/easy-file-share/main/assets/architecture.png" width="480" height="80" alt="Architecture diagram">
+  </picture>
+</p>
