@@ -78,10 +78,7 @@ export const server = (options) => {
         .match(
           /\bhttps?:\/\/(?:[\w-]+\.)*[\w-]+(?:\.[a-zA-Z]{2,})+(?:\/(?:[^\s/$.?#]+\/?)*(?:\?[^\s/?#]+)?(?:#[^\s#]*)?)?/
         );
-      if (!match || !match.length) {
-        logger.info(chunk.toString());
-        return logger.error("Couldn't parse tunnel url");
-      }
+      if (!match || !match.length) return;
       /** @type {string} */
       const url = match[0];
       if (id) {
