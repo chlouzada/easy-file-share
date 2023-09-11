@@ -63,8 +63,11 @@ export const server = (options) => {
     const stream = execa('ssh', [
       '-R',
       `80:localhost:${PORT}`,
+      '-o',
+      'StrictHostKeyChecking=no',
       'localhost.run',
     ]).stdout;
+
     if (!stream) {
       return logger.error('Error creating tunnel');
     }
