@@ -42,9 +42,9 @@ const _tunnelRepository = {
 
 const proxy = new Proxy(_tunnelRepository, {
   get: (target, prop) => {
-    TunnelCollection.deleteMany({
-      updatedAt: { $lt: new Date(Date.now() - 1000 * 60 * 15) },
-    });
+    // TunnelCollection.deleteMany({
+    //   updatedAt: { $lt: new Date(Date.now() - 1000 * 60 * 15) },
+    // });
     return (target as any)[prop];
   },
 });
