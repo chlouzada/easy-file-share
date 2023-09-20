@@ -7,7 +7,7 @@ import { withRateLimit } from '@/server/utils/withRateLimit';
 const DEFAULT_LENGTH = 5;
 
 const getValidKey = async (): Promise<string> => {
-  const key = nanoid(DEFAULT_LENGTH);
+  const key = nanoid(DEFAULT_LENGTH).toLowerCase();
   if (key.startsWith('-')) return getValidKey();
   const found = await tunnelRepository.findByKey(key);
   if (found) return getValidKey();
