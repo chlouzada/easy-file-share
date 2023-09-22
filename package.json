@@ -9,8 +9,9 @@
   },
   "scripts": {
     "dev": "pnpm --filter \"app\" dev",
+    "build": "pnpm --filter \"app\" build",
     "start": "pnpm --filter \"easy-file-share\" start",
-    "build": "pnpm --filter \"app\" build"
+    "version": "pnpm --filter \"easy-file-share\" version"
   },
   "dependencies": {
     "commander": "^10.0.1"
