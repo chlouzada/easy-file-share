@@ -13,7 +13,7 @@
     "@types/react": "18.2.6",
     "@types/react-dom": "18.2.4",
     "@upstash/ratelimit": "^0.4.3",
-    "@vercel/kv": "^0.2.1",
+    "@upstash/redis": "^1.22.0",
     "mongodb": "^5.5.0",
     "nanoid": "^4.0.2",
     "next": "13.4.3",
