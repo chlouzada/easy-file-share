@@ -56,7 +56,6 @@ export const pull = async (data, options) => {
       if(!Array.isArray(res.data)) {
         logger.error('Tunnel is closed')
       } 
-      console.log(res.data)
       files = res.data;
     } catch (error) {
       if (error.response?.status === 401) {
