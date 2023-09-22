@@ -38,6 +38,7 @@ export const server = (options) => {
   password = options.password;
   createServer((req, res) => {
     if (!isAuthed(req.headers)) {
+      logger.warn(`${dtFormatter.format(new Date())} | Unauthorized request`);
       res.writeHead(401);
       res.end();
       return;
