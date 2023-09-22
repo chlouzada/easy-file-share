@@ -12,7 +12,31 @@ importers:
         specifier: ^10.0.1
         version: 10.0.1
 
-  packages/app:
+  packages/cli:
+    dependencies:
+      axios:
+        specifier: ^1.4.0
+        version: 1.4.0
+      chalk:
+        specifier: ^5.2.0
+        version: 5.2.0
+      commander:
+        specifier: ^10.0.1
+        version: 10.0.1
+      execa:
+        specifier: ^7.1.1
+        version: 7.1.1
+      inquirer:
+        specifier: ^9.2.6
+        version: 9.2.6
+      latest-version:
+        specifier: ^7.0.0
+        version: 7.0.0
+      ora:
+        specifier: ^6.3.1
+        version: 6.3.1
+
+  packages/web:
     dependencies:
       '@types/node':
         specifier: 20.2.3
@@ -50,30 +74,6 @@ importers:
       zod:
         specifier: ^3.21.4
         version: 3.21.4
-
-  packages/cli:
-    dependencies:
-      axios:
-        specifier: ^1.4.0
-        version: 1.4.0
-      chalk:
-        specifier: ^5.2.0
-        version: 5.2.0
-      commander:
-        specifier: ^10.0.1
-        version: 10.0.1
-      execa:
-        specifier: ^7.1.1
-        version: 7.1.1
-      inquirer:
-        specifier: ^9.2.6
-        version: 9.2.6
-      latest-version:
-        specifier: ^7.0.0
-        version: 7.0.0
-      ora:
-        specifier: ^6.3.1
-        version: 6.3.1
 
 packages:
 
