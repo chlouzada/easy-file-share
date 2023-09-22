@@ -4,14 +4,14 @@
 import { program } from 'commander';
 import latestVersion from 'latest-version';
 
-import { server } from './helpers/server.js';
+import { serve } from './helpers/serve.js';
 import { pull } from './helpers/pull.js';
 import { logger } from './helpers/logger.js';
 
 program
   .command('serve')
   .option('-p, --password <password>', 'Password')
-  .action(server);
+  .action(serve);
 
 program
   .command('pull')

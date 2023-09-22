@@ -34,7 +34,7 @@ const isAuthed = (headers) => {
 };
 
 /** @param {{ password?: string }} options */
-export const server = (options) => {
+export const serve = (options) => {
   password = options.password;
   createServer((req, res) => {
     if (!isAuthed(req.headers)) {
