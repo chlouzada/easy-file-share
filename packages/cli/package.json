@@ -1,7 +1,11 @@
 {
   "name": "easy-file-share",
   "version": "0.2.6",
-  "description": "",
+  "description": "A CLI to share files easily",
+  "keywords": [
+    "file sharing",
+    "cli"
+  ],
   "main": "index.js",
   "type": "module",
   "bin": {
