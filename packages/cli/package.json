@@ -1,6 +1,6 @@
 {
   "name": "easy-file-share",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "description": "A CLI to share files easily",
   "keywords": [
     "file sharing",
@@ -20,7 +20,8 @@
   "license": "MIT",
   "scripts": {
     "start": "node ./src/index.js",
-    "version": "npm version"
+    "version": "npm version",
+    "release": "npm publish"
   },
   "author": "",
   "dependencies": {

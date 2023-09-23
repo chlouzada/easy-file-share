@@ -13,7 +13,7 @@
     "start": "pnpm --filter \"easy-file-share\" start",
     "version": "pnpm --filter \"easy-file-share\" version",
     "prerelease": "node ./scripts/update-version-contant.js",
-    "release": "pnpm --filter \"easy-file-share\" publish"
+    "release": "pnpm --filter \"easy-file-share\" release"
   },
   "dependencies": {
     "commander": "^10.0.1"
