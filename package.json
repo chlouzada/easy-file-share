@@ -12,7 +12,8 @@
     "build": "pnpm --filter \"app\" build",
     "start": "pnpm --filter \"easy-file-share\" start",
     "version": "pnpm --filter \"easy-file-share\" version",
-    "publish": "pnpm --filter \"easy-file-share\" publish"
+    "prerelease": "node ./scripts/update-version-contant.js",
+    "release": "pnpm --filter \"easy-file-share\" publish"
   },
   "dependencies": {
     "commander": "^10.0.1"
