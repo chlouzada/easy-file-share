@@ -7,6 +7,12 @@ import latestVersion from 'latest-version';
 import { serve } from './helpers/serve.js';
 import { pull } from './helpers/pull.js';
 import { logger } from './helpers/logger.js';
+import { VERSION } from './constants/version.js';
+
+program
+  .name('easy-file-share')
+  .description('Share files easily')
+  .version(VERSION);
 
 program
   .command('serve')
@@ -20,7 +26,12 @@ program
   .description('Pull a file from a tunnel')
   .action(pull);
 
-program.hook('preAction', async () => {
-  const latest = await latestVersion('easy-file-share');
-  process.env.npm_package_version !== latest && logger.warn(`A new version (${latest}) is available. Please consider upgrading using npm install -g easy-file-share@latest`);
-}).parse(process.argv);
+program
+  .hook('preAction', async () => {
+    const latest = await latestVersion('easy-file-share');
+    VERSION !== latest &&
+      logger.warn(
+        `A new version (${latest}) is available. Please consider upgrading using npm install -g easy-file-share@latest`
+      );
+  })
+  .parse(process.argv);
