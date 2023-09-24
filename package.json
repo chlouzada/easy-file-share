@@ -7,8 +7,8 @@
     "url": "https://github.com/chlouzada/easy-file-share.git"
   },
   "scripts": {
-    "dev": "pnpm --filter \"app\" dev",
-    "build": "pnpm --filter \"app\" build",
+    "dev": "pnpm --filter \"@easy-file-share/web\" dev",
+    "build": "pnpm --filter \"@easy-file-share/web\" build",
     "start": "pnpm --filter \"easy-file-share\" start",
     "version": "pnpm --filter \"easy-file-share\" version",
     "prerelease": "node ./scripts/update-version-contant.js",
