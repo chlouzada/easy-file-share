@@ -1,6 +1,5 @@
 {
-  "name": "easy-file-share",
-  "version": "0.0.0",
+  "name": "@easy-file-share/root",
   "author": "Carlos Fonseca",
   "license": "MIT",
   "repository": {
