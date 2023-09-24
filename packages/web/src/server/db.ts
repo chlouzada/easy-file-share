@@ -1,7 +1,7 @@
 import { MongoClient, ObjectId } from 'mongodb';
 import { z } from 'zod';
 
-const client = new MongoClient(process.env.MONGO_URL!);
+const client = new MongoClient(process.env.MONGODB_URI!);
 
 const TunnelCollection = client.db('easy-file-share').collection('tunnels');
 
