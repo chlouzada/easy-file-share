@@ -74,12 +74,7 @@ export const serve = (options) => {
       return logger.error('Error creating tunnel');
     }
 
-    /** @type {{ id: NodeJS.Timeout | null, data: string[] }} */
-    const err = {
-      id: null,
-      data: [],
-    };
-    stderr?.on('data', (data) => {
+    stderr.on('data', (data) => {
       const isWithoutSshKey = data
         .toString()
         .includes('Permission denied (publickey).');
@@ -87,10 +82,6 @@ export const serve = (options) => {
         spinner.stop();
         return logger.error('Please, add your ssh key to your ssh-agent');
       }
-      err.data.push(data.toString());
-      err.id = setInterval(() => {
-        logger.error(err.data.join(''));
-      }, 5000);
     });
 
     stdout.on('data', async (chunk) => {
@@ -103,7 +94,6 @@ export const serve = (options) => {
       if (!match || !match.length) return;
       /** @type {string} */
       const url = match[0];
-      err.id && clearInterval(err.id);
       if (id) {
         tunnel.update(id, url);
       } else {
