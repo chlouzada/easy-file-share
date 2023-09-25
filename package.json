@@ -11,7 +11,7 @@
     "build": "pnpm --filter \"@easy-file-share/web\" build",
     "start": "pnpm --filter \"easy-file-share\" start",
     "version": "pnpm --filter \"easy-file-share\" version",
-    "prerelease": "node ./scripts/update-version-contant.js",
+    "postversion": "node ./scripts/update-version-contant.js",
     "release": "pnpm --filter \"easy-file-share\" release"
   },
   "dependencies": {
