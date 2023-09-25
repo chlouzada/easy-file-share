@@ -84,6 +84,7 @@ export const serve = (options) => {
         .toString()
         .includes('Permission denied (publickey).');
       if (isWithoutSshKey) {
+        spinner.stop();
         return logger.error('Please, add your ssh key to your ssh-agent');
       }
       err.data.push(data.toString());
@@ -102,6 +103,7 @@ export const serve = (options) => {
       if (!match || !match.length) return;
       /** @type {string} */
       const url = match[0];
+      err.id && clearInterval(err.id);
       if (id) {
         tunnel.update(id, url);
       } else {
