@@ -61,18 +61,28 @@ export const serve = (options) => {
     logger.info(`${dtFormatter.format(new Date())} | Served ${url}`);
   }).listen(PORT, async () => {
     const spinner = ora('Initializing tunnel').start();
-    const stream = execa('ssh', [
+    const { stdout, stderr } = execa('ssh', [
+      '-tt',
       '-R',
       `80:localhost:${PORT}`,
       '-o',
       'StrictHostKeyChecking=no',
       'localhost.run',
-    ]).stdout;
+    ]);
 
-    if (!stream) {
+    if (!stdout || !stderr) {
       return logger.error('Error creating tunnel');
     }
-    stream.on('data', async (chunk) => {
+
+    stderr?.on('data', (data) => {
+      const isWithoutSshKey = data.toString().includes('Permission denied (publickey).');
+      if (isWithoutSshKey) {
+        return logger.error('Please, add your ssh key to your ssh-agent');
+      }
+      logger.error(data.toString());
+    });
+
+    stdout.on('data', async (chunk) => {
       /** @type {string[] | null} */
       const match = chunk
         .toString()
