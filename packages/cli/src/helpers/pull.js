@@ -6,6 +6,7 @@ import inquirer from 'inquirer';
 
 import { tunnel } from './tunnel.js';
 import { logger } from './logger.js';
+import { initTracker } from './serve.js';
 
 /**
  *  @param {string[]} files
@@ -32,6 +33,20 @@ const inquire = async (files) => {
   return { file, filename };
 };
 
+
+/** @param {string} key */
+const getUrlFromTracker = (key) => {
+  return new Promise((resolve) => {
+    const tracker = initTracker({key});
+    tracker.start({})
+    tracker.on('peer', (peer) => {
+      const peerId = Buffer.from(peer.id, "hex").toString()
+      const received = peerId.split("@")[0];
+      resolve(`http://${received}.lhr.life`);
+    })
+  })
+}
+
 /**
  *
  * @param {string} data
@@ -41,7 +56,7 @@ const inquire = async (files) => {
 export const pull = async (data, options) => {
   try {
     /** @type {string | null} */
-    const baseUrl = data.startsWith('http') ? data : await tunnel.get(data);
+    const baseUrl = data.startsWith('http') ? data : await getUrlFromTracker(data);
     if (!baseUrl) {
       return logger.error(`No tunnel found with id ${data}`);
     }

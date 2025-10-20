@@ -5,6 +5,8 @@ import { createServer } from 'http';
 import { join } from 'path';
 import { execa } from 'execa';
 import ora from 'ora';
+import TrackerClient from 'bittorrent-tracker';
+import crypto from 'crypto';
 
 import { tunnel } from './tunnel.js';
 import { logger } from './logger.js';
@@ -84,6 +86,9 @@ export const serve = (options) => {
       }
     });
 
+    /** @type {TrackerClient | undefined} */
+    let tracker
+
     stdout.on('data', async (chunk) => {
       /** @type {string[] | null} */
       const match = chunk
@@ -93,18 +98,52 @@ export const serve = (options) => {
         );
       if (!match || !match.length) return;
       /** @type {string} */
-      const url = match[0];
-      if (id) {
-        tunnel.update(id, url);
-      } else {
-        const created = await tunnel.create(url);
-        id = created.id;
-        key = created.key;
-        spinner.stop();
-        logger.success('Tunnel created successfully\n');
-        logger.info('Key:', key);
-      }
+      const url = match[0]
+
+      
+        if(tracker) {
+          tracker.destroy()
+        }
+
+      const key = generateShareKey();
+      const prefix = url.replace('https://', '').split('.')[0];
+      
+
+      tracker = initTracker({key, prefix});
+      tracker.start({});
+
+      logger.success('Tunnel created successfully\n');
+      logger.info('Key:', key);
       logger.info('URL:', url);
     });
   });
 };
+
+const BASE_INFOHASH = Buffer.from("efs0000000000000", "utf8");
+function generateShareKey() {
+  const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  let key = "";
+  for (let i = 0; i < 4; i++) {
+    key += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return key;
+}
+/** @param {string} key */
+function createInfoHash(key) {
+  const combined = Buffer.concat([BASE_INFOHASH, Buffer.from(key, "utf8")]);
+  return combined;
+}
+
+/** @param {{ key: string, prefix?: string }} options */
+export const initTracker = ({key,prefix = ''}) => {
+  const infoHash = createInfoHash(key);
+  const peerId = [...Buffer.from(prefix) , ...Buffer.from("@"), ...crypto.randomBytes(20  - 1 - prefix.length)];
+  // FIXME: throw ERR_ICE_CONNECTION_CLOSED 
+  const tracker = new TrackerClient({
+    infoHash: infoHash,
+    peerId: peerId,
+    announce: ["wss://sd-production-17a2.up.railway.app"],
+    port: 6881,
+  })
+  return tracker;
+}
