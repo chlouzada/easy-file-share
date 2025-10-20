@@ -1,6 +1,6 @@
 {
   "name": "easy-file-share",
-  "version": "0.2.13",
+  "version": "1.0.0",
   "description": "A CLI to share files easily",
   "keywords": [
     "file sharing",
